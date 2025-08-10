@@ -1,0 +1,140 @@
+#include <iostream>
+//---------------------------------------------------------------------------
+#pragma hdrstop // Cabecera estándar de C++ Builder
+#include <tchar.h> // Para el _tmain
+//---------------------------------------------------------------------------
+#include <System.hpp> // NECESARIO para usar la clase 'String' (con mayúscula) de C++ Builder
+#include <stdio.h>    // Para E/S de archivos estilo C (fopen, fgetc, fclose) y printf
+#include <conio.h>    // Para la función _getche() que lee un caracter sin esperar Enter
+#include <ctype.h>    // Para la función isdigit()
+
+// Declaración de nuestra función principal de procesamiento
+void procesarNumeros(char operacion);
+
+#pragma argsused
+int _tmain(int argc, _TCHAR* argv[])
+{
+    char opcion;
+
+    do {
+        // system("cls") limpia la pantalla de la consola para mostrar un menú limpio
+        system("cls");
+        printf("=============================================\n");
+        printf("    OPERACIONES CON NUMEROS DESDE .TXT     \n");
+        printf("=============================================\n\n");
+        printf("   MENU PRINCIPAL\n");
+        printf("   1. Sumar todos los numeros del archivo\n");
+        printf("   2. Restar numeros (primer_numero - los_demas)\n");
+        printf("   3. Salir\n\n");
+        printf("   Elija una opcion: ");
+
+        // _getche() captura la tecla presionada y la muestra en pantalla, sin necesidad de dar Enter
+		opcion = getche();
+        printf("\n\n"); // Salto de línea para formato
+
+		switch (opcion) {
+			case '1':
+                procesarNumeros('+'); // Llama a la función en modo 'suma'
+                break;
+            case '2':
+                procesarNumeros('-'); // Llama a la función en modo 'resta'
+                break;
+			case '3':
+                printf("Saliendo del programa...\n");
+                break;
+            default:
+                printf("Opcion no valida. Presione cualquier tecla para continuar.\n");
+                _getch(); // Espera una tecla antes de volver al menú
+                break;
+        }
+
+    } while (opcion != '3');
+
+    return 0;
+}
+
+/**
+ * @brief Lee un archivo de texto, extrae todos los números y los suma o resta.
+ * @param operacion El carácter que define la operación: '+' para sumar, '-' para restar.
+ */
+void procesarNumeros(char operacion) {
+    // Abrimos el archivo en modo lectura ('r' de read)
+    FILE* archivo = fopen("datos.txt", "r");
+
+    // Si el archivo no se puede abrir, fopen devuelve NULL
+    if (archivo == NULL) {
+        printf("Error: No se pudo encontrar o abrir el archivo 'datos.txt'.\n");
+        printf("Asegurese de que el archivo existe en la misma carpeta que el ejecutable.\n");
+        system("pause"); // Pausa para que el usuario pueda leer el mensaje
+        return;
+    }
+
+    double resultado = 0.0;
+    bool primerNumeroEncontrado = false; // Bandera para la lógica de resta
+
+    char bufferNumero[64]; // Un buffer para almacenar los caracteres de un número
+    int indiceBuffer = 0;
+    int caracterActual;
+
+    printf("Procesando archivo 'datos.txt'...\n\n");
+
+    // Leemos el archivo caracter por caracter hasta llegar al final (EOF - End Of File)
+    while ((caracterActual = fgetc(archivo)) != EOF) {
+
+        // CONDICIÓN DE INICIO DE NÚMERO:
+        // Un número empieza si el caracter actual es un dígito, o si es un '-'
+        // seguido inmediatamente por un dígito.
+        if (isdigit(caracterActual) || (caracterActual == '-' && isdigit(fgetc(archivo)))) {
+
+            // Si era un '-', devolvemos el caracter que le seguía al flujo para no perderlo
+            if (caracterActual == '-') {
+                 ungetc(fgetc(archivo), archivo); // Devolvemos el caracter que acabamos de leer con fgetc
+            }
+            ungetc(caracterActual, archivo); // Devolvemos el caracter inicial ('-' o el primer dígito)
+
+            indiceBuffer = 0; // Reiniciamos nuestro buffer
+
+            // Bucle para leer el número completo (dígitos y un punto decimal)
+            while(true) {
+                caracterActual = fgetc(archivo);
+                if (isdigit(caracterActual) || caracterActual == '.' || (indiceBuffer == 0 && caracterActual == '-')) {
+                    bufferNumero[indiceBuffer++] = caracterActual;
+                } else {
+                    ungetc(caracterActual, archivo); // Devolvemos el caracter que ya no es parte del número
+                    break;
+                }
+            }
+            bufferNumero[indiceBuffer] = '\0'; // Terminamos el string estilo C
+
+            // Convertimos el buffer a un número double usando la clase String de C++ Builder
+            String sNumero = bufferNumero;
+            double numero = sNumero.ToDouble();
+
+            printf("Numero encontrado: %.2f\n", numero);
+
+            // LÓGICA DE OPERACIÓN
+            if (operacion == '+') {
+                resultado += numero;
+            } else if (operacion == '-') {
+                if (!primerNumeroEncontrado) {
+                    resultado = numero; // El primer número es el minuendo
+                    primerNumeroEncontrado = true;
+                } else {
+                    resultado -= numero; // Los siguientes números son sustraendos
+                }
+            }
+        }
+    }
+
+    fclose(archivo); // Cerramos el archivo para liberar recursos
+
+    // Mostramos el resultado final
+    printf("\n---------------------------------------------\n");
+    if (operacion == '+') {
+       printf("La SUMA total de los numeros es: %.2f\n", resultado);
+    } else {
+       printf("El RESULTADO de la resta es: %.2f\n", resultado);
+    }
+    printf("---------------------------------------------\n");
+    system("pause"); // Pausa para que el usuario vea el resultado antes de volver al menú
+}
