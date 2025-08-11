@@ -18,24 +18,24 @@ int _tmain(int argc, _TCHAR* argv[])
     char opcion;
 
     do {
-        system("cls");
-        printf("=============================================\n");
-        printf("     CALCULADORA DE ARCHIVOS DE TEXTO      \n");
-        printf("=============================================\n\n");
-        printf("   MENU PRINCIPAL\n");
-        printf("   1. Resolver del archivo (datos.txt)\n");
-        printf("   2. Salir\n\n");
-        printf("   Elija una opcion: ");
+		system("cls");
+		printf("=============================================\n");
+		printf("     CALCULADORA DE ARCHIVOS DE TEXTO      \n");
+		printf("=============================================\n\n");
+		printf("   MENU PRINCIPAL\n");
+		printf("   1. Resolver del archivo (datos.txt)\n");
+		printf("   2. Salir\n\n");
+		printf("   Elija una opcion: ");
 
         opcion = getche();
         printf("\n\n");
 
         switch (opcion) {
-            case '1':
-                resolverDesdeArchivo();
+			case '1':
+				resolverDesdeArchivo();
                 break;
             case '2':
-                printf("Saliendo del programa...\n");
+				printf("Saliendo del programa...\n");
                 break;
             default:
                 printf("Opcion no valida. Presione cualquier tecla para continuar.\n");
@@ -54,75 +54,71 @@ int _tmain(int argc, _TCHAR* argv[])
  * su signo (+ o -) y calcula la suma total.
  */
 void resolverDesdeArchivo() {
-    FILE* archivo = fopen("datos.txt", "r");
 
-    if (archivo == NULL) {
-        printf("Error: No se pudo encontrar o abrir el archivo 'datos.txt'.\n");
-        system("pause");
+	FILE* archivo = fopen("datos.txt", "r");
+	if (archivo == NULL) {
+		printf("Error: No se pudo encontrar o abrir el archivo 'datos.txt'.\n");
+		system("pause");
         return;
-    }
+	}
+	double resultado = 0.0;
+	char bufferNumero[64];
+	int indiceBuffer = 0;
+	int caracterActual;
+	printf("Procesando 'datos.txt'...\n\n");
 
-    double resultado = 0.0;
-    char bufferNumero[64];
-    int indiceBuffer = 0;
-    int caracterActual;
-
-    printf("Procesando 'datos.txt'...\n\n");
-
-    while ((caracterActual = fgetc(archivo)) != EOF) {
+	while ((caracterActual = fgetc(archivo)) != EOF) {
 
 		// --- LÓGICA DE DETECCIÓN  ---
         //    maneja  los números positivos y negativos.
-
-        bool esInicioDeNumero = false;
-
+		bool esInicioDeNumero = false;
         // Si es un dígito, definitivamente es el inicio de un número.
-        if (isdigit(caracterActual)) {
-            esInicioDeNumero = true;
-            ungetc(caracterActual, archivo); // Se devuelve el dígito para leerlo de forma uniforme.
-        }
-        // Si es un guion, verificamos si le sigue un dígito.
-        else if (caracterActual == '-') {
-            int proximoCaracter = fgetc(archivo);
-            if (proximoCaracter != EOF && isdigit(proximoCaracter)) {
-                esInicioDeNumero = true;
+		if (isdigit(caracterActual)) {
+			esInicioDeNumero = true;
+			ungetc(caracterActual, archivo); // Se devuelve el dígito para leerlo de forma uniforme.
+		}
+			if (caracterActual=='\n') {
+
+	}
+		// Si es un guion, verificamos si le sigue un dígito.
+		else if (caracterActual == '-') {
+			int proximoCaracter = fgetc(archivo);
+			if (proximoCaracter != EOF && isdigit(proximoCaracter)) {
+				esInicioDeNumero = true;
                 // Devolvemos ambos caracteres en el orden correcto para leer el número completo.
 				ungetc(proximoCaracter, archivo);
-                ungetc(caracterActual, archivo); // El '-' se devuelve al final para que sea el primero en leerse.
+				ungetc(caracterActual, archivo); // El '-' se devuelve al final para que sea el primero en leerse.
             } else if (proximoCaracter != EOF) {
                 // Si no le sigue un dígito, no es un número, así que devolvemos el caracter.
-                ungetc(proximoCaracter, archivo);
+				ungetc(proximoCaracter, archivo);
             }
-        }
+		}
 
         // Si se confirmó que es el inicio de un número, lo leemos completo.
-        if (esInicioDeNumero) {
-            indiceBuffer = 0;
-
+		if (esInicioDeNumero) {
+			indiceBuffer = 0;
             while (true) {
 				caracterActual = fgetc(archivo);
                 // La condición de lectura del número completo.
-                if ((indiceBuffer == 0 && caracterActual == '-') || isdigit(caracterActual) || caracterActual == '.') {
-                    bufferNumero[indiceBuffer++] = caracterActual;
-                } else {
-                    ungetc(caracterActual, archivo); // Se devuelve el caracter que ya no es parte del número.
-                    break;
+				if ((indiceBuffer == 0 && caracterActual == '-') || isdigit(caracterActual) || caracterActual == '.') {
+					bufferNumero[indiceBuffer++] = caracterActual;
+				} else {
+					ungetc(caracterActual, archivo); // Se devuelve el caracter que ya no es parte del número.
+
+					break;
                 }
             }
-            bufferNumero[indiceBuffer] = '\0';
-
+			bufferNumero[indiceBuffer] = '\0';
 			double numero = atof(bufferNumero);
-            printf("Numero encontrado: %.2f\n", numero);
+			   printf("Numero encontrado: %.2f\n", numero);
 
-            // Se suma el número (positivo o negativo) al resultado.
-            resultado += numero;
-        }
-    }
-
-    fclose(archivo);
-
-    printf("\n---------------------------------------------\n");
-    printf("El resultado final de las operaciones es: %.2f\n", resultado);
-    printf("---------------------------------------------\n");
-    system("pause");
+			// Se suma el número (positivo o negativo) al resultado.
+		  resultado += numero;
+		}
+	}
+	fclose(archivo);
+	printf("\n---------------------------------------------\n");
+	printf("El resultado final de las operaciones es: %.2f\n", resultado);
+	printf("---------------------------------------------\n");
+	system("pause");
 }
