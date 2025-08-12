@@ -241,7 +241,7 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
         return; // Salimos de la función si el archivo no existe
     }
 
-    // La lógica para encontrar números es la misma que ya teníamos
+	// La lógica para encontrar números
     int caracterActual;
     while ((caracterActual = fgetc(archivo)) != EOF) {
         bool esInicioDeNumero = false;
@@ -274,7 +274,7 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
             buffer[i] = '\0';
             double numero = atof(buffer);
 
-            // --- Lógica principal de esta función ---
+
             sumaTotal += numero;
             cantidadNumeros++; // Aumentamos el contador por cada número encontrado
         }

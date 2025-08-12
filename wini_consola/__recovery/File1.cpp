@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 #pragma hdrstop
 #include <tchar.h>
 //---------------------------------------------------------------------------
@@ -287,13 +287,14 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
  */
 void calcularPromedioDeVariosArchivos() {
 	int cantidadArchivos = 0;
-    printf("¿Cuantos archivos desea promediar? ");
-    scanf("%d", &cantidadArchivos);
-
+	/*printf("¿Cuantos archivos desea promediar? ");
+	scanf("%d", &cantidadArchivos);
+	  */
+   cantidadArchivos=2;
     // Limpiamos el buffer de entrada después de leer un número
     while (getchar() != '\n');
 
-    if (cantidadArchivos <= 0) {
+	if (cantidadArchivos <= 0) {
         printf("Cantidad no valida.\n");
         system("pause");
         return;

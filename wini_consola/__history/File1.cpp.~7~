@@ -1,15 +1,15 @@
-Ôªø//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 #pragma hdrstop
 #include <tchar.h>
 //---------------------------------------------------------------------------
 
-// LIBRER√çAS EST√ÅNDAR (SIN VCL)
+// LIBRERÕAS EST¡NDAR (SIN VCL)
 #include <stdio.h>    // Para E/S de archivos y consola estilo C (fopen, printf)
-#include <stdlib.h>   // Para la funci√≥n est√°ndar atof()
+#include <stdlib.h>   // Para la funciÛn est·ndar atof()
 #include <conio.h>    // Para getche() y getch()
-#include <ctype.h>    // Para la funci√≥n isdigit()
+#include <ctype.h>    // Para la funciÛn isdigit()
 
-// Declaraci√≥n de la funci√≥n que procesar√° el archivo
+// DeclaraciÛn de la funciÛn que procesar· el archivo
 void resolverDesdeArchivo();
 void imprimir2dos();
 void calcularPromedioDeVariosArchivos();
@@ -58,7 +58,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 /**
- * @brief Lee el archivo datos.txt, extrae todos los n√∫meros respetando
+ * @brief Lee el archivo datos.txt, extrae todos los n˙meros respetando
  * su signo (+ o -) y calcula la suma total.
  */
 void resolverDesdeArchivo() {
@@ -77,41 +77,41 @@ void resolverDesdeArchivo() {
 
 	while ((caracterActual = fgetc(archivo)) != EOF) {
 
-		// --- L√ìGICA DE DETECCI√ìN  ---
-        //    maneja  los n√∫meros positivos y negativos.
+		// --- L”GICA DE DETECCI”N  ---
+        //    maneja  los n˙meros positivos y negativos.
 		bool esInicioDeNumero = false;
-        // Si es un d√≠gito, definitivamente es el inicio de un n√∫mero.
+        // Si es un dÌgito, definitivamente es el inicio de un n˙mero.
 		if (isdigit(caracterActual)) {
 			esInicioDeNumero = true;
-			ungetc(caracterActual, archivo); // Se devuelve el d√≠gito para leerlo de forma uniforme.
+			ungetc(caracterActual, archivo); // Se devuelve el dÌgito para leerlo de forma uniforme.
 		}
 			if (caracterActual=='\n') {
 
 	}
-		// Si es un guion, verificamos si le sigue un d√≠gito.
+		// Si es un guion, verificamos si le sigue un dÌgito.
 		else if (caracterActual == '-') {
 			int proximoCaracter = fgetc(archivo);
 			if (proximoCaracter != EOF && isdigit(proximoCaracter)) {
 				esInicioDeNumero = true;
-                // Devolvemos ambos caracteres en el orden correcto para leer el n√∫mero completo.
+                // Devolvemos ambos caracteres en el orden correcto para leer el n˙mero completo.
 				ungetc(proximoCaracter, archivo);
 				ungetc(caracterActual, archivo); // El '-' se devuelve al final para que sea el primero en leerse.
             } else if (proximoCaracter != EOF) {
-                // Si no le sigue un d√≠gito, no es un n√∫mero, as√≠ que devolvemos el caracter.
+                // Si no le sigue un dÌgito, no es un n˙mero, asÌ que devolvemos el caracter.
 				ungetc(proximoCaracter, archivo);
             }
 		}
 
-        // Si se confirm√≥ que es el inicio de un n√∫mero, lo leemos completo.
+        // Si se confirmÛ que es el inicio de un n˙mero, lo leemos completo.
 		if (esInicioDeNumero) {
 			indiceBuffer = 0;
             while (true) {
 				caracterActual = fgetc(archivo);
-                // La condici√≥n de lectura del n√∫mero completo.
+                // La condiciÛn de lectura del n˙mero completo.
 				if ((indiceBuffer == 0 && caracterActual == '-') || isdigit(caracterActual) || caracterActual == '.') {
 					bufferNumero[indiceBuffer++] = caracterActual;
 				} else {
-					ungetc(caracterActual, archivo); // Se devuelve el caracter que ya no es parte del n√∫mero.
+					ungetc(caracterActual, archivo); // Se devuelve el caracter que ya no es parte del n˙mero.
 
 					break;
                 }
@@ -120,7 +120,7 @@ void resolverDesdeArchivo() {
 			double numero = atof(bufferNumero);
 			   printf("Numero encontrado: %.2f\n", numero);
 
-			// Se suma el n√∫mero (positivo o negativo) al resultado.
+			// Se suma el n˙mero (positivo o negativo) al resultado.
 		  resultado += numero;
 		}
 	}
@@ -131,16 +131,16 @@ void resolverDesdeArchivo() {
 	system("pause");
 }
 /**
- * @brief Encuentra el segundo n√∫mero m√°s grande en un array de doubles.
- * @param numeros Array de n√∫meros.
- * @param contador Cu√°ntos n√∫meros hay en el array.
+ * @brief Encuentra el segundo n˙mero m·s grande en un array de doubles.
+ * @param numeros Array de n˙meros.
+ * @param contador Cu·ntos n˙meros hay en el array.
  */
 void encontrarSegundoMayor(double numeros[], int contador) {
     if (contador < 2) {
         printf("No hay suficientes numeros para encontrar un segundo mayor.\n");
         return;
     }
-    double mayor = -1e300; // Un n√∫mero muy peque√±o
+    double mayor = -1e300; // Un n˙mero muy pequeÒo
     double segundoMayor = -1e300;
     for (int i = 0; i < contador; i++) {
         if (numeros[i] > mayor) {
@@ -154,8 +154,8 @@ void encontrarSegundoMayor(double numeros[], int contador) {
 }
 
 /**
- * @brief Lee el archivo l√≠nea por l√≠nea y para cada una, imprime el segundo
- * n√∫mero m√°s grande que encuentre.
+ * @brief Lee el archivo lÌnea por lÌnea y para cada una, imprime el segundo
+ * n˙mero m·s grande que encuentre.
  */
 void imprimir2dos() {
 	FILE* archivo = fopen("datos.txt", "r");
@@ -169,18 +169,18 @@ void imprimir2dos() {
     int numeroDeFila = 1;
     // Bucle principal que se ejecuta hasta el fin del archivo
     while ((caracterActual = fgetc(archivo)) != EOF) {
-        ungetc(caracterActual, archivo); // Devolvemos el caracter para empezar a procesar la l√≠nea
-        // Array para guardar los n√∫meros de la l√≠nea actual
+        ungetc(caracterActual, archivo); // Devolvemos el caracter para empezar a procesar la lÌnea
+        // Array para guardar los n˙meros de la lÌnea actual
         double numerosEnLaFila[256];
         int contadorDeNumeros = 0;
         bool finDeLinea = false;
-        // Bucle para procesar una sola l√≠nea
+        // Bucle para procesar una sola lÌnea
         while (!finDeLinea) {
             caracterActual = fgetc(archivo);
             if (caracterActual == EOF || caracterActual == '\n') {
                 finDeLinea = true;
             } else {
-                 // L√≥gica para extraer un n√∫mero (similar a la funci√≥n anterior)
+                 // LÛgica para extraer un n˙mero (similar a la funciÛn anterior)
                 bool esInicioDeNumero = false;
                 if (isdigit(caracterActual)) {
                     esInicioDeNumero = true;
@@ -208,14 +208,14 @@ void imprimir2dos() {
                         }
                     }
                     buffer[i] = '\0';
-                    // Guardamos el n√∫mero encontrado en nuestro array temporal
+                    // Guardamos el n˙mero encontrado en nuestro array temporal
                     if (contadorDeNumeros < 256) {
                         numerosEnLaFila[contadorDeNumeros++] = atof(buffer);
                     }
                 }
             }
         }
-        // Al final de la l√≠nea, procesamos los n√∫meros encontrados
+        // Al final de la lÌnea, procesamos los n˙meros encontrados
         printf("Fila %d: ", numeroDeFila++);
         encontrarSegundoMayor(numerosEnLaFila, contadorDeNumeros);
     }
@@ -225,10 +225,10 @@ void imprimir2dos() {
 }
 
 /**
- * @brief Procesa un √∫nico archivo para obtener la suma y cantidad de n√∫meros.
+ * @brief Procesa un ˙nico archivo para obtener la suma y cantidad de n˙meros.
  * @param rutaArchivo La ruta completa al archivo de texto.
- * @param sumaTotal Referencia donde se guardar√° la suma de los n√∫meros.
- * @param cantidadNumeros Referencia donde se guardar√° la cantidad de n√∫meros.
+ * @param sumaTotal Referencia donde se guardar· la suma de los n˙meros.
+ * @param cantidadNumeros Referencia donde se guardar· la cantidad de n˙meros.
  */
 void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int &cantidadNumeros) {
     // Inicializamos los valores de salida
@@ -238,10 +238,10 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
     FILE* archivo = fopen(rutaArchivo, "r");
     if (archivo == NULL) {
         printf(" -> Error: No se pudo abrir el archivo '%s'.\n", rutaArchivo);
-        return; // Salimos de la funci√≥n si el archivo no existe
+        return; // Salimos de la funciÛn si el archivo no existe
     }
 
-	// La l√≥gica para encontrar n√∫meros
+    // La lÛgica para encontrar n˙meros es la misma que ya tenÌamos
     int caracterActual;
     while ((caracterActual = fgetc(archivo)) != EOF) {
         bool esInicioDeNumero = false;
@@ -274,9 +274,9 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
             buffer[i] = '\0';
             double numero = atof(buffer);
 
-
+            // --- LÛgica principal de esta funciÛn ---
             sumaTotal += numero;
-            cantidadNumeros++; // Aumentamos el contador por cada n√∫mero encontrado
+            cantidadNumeros++; // Aumentamos el contador por cada n˙mero encontrado
         }
     }
     fclose(archivo);
@@ -287,10 +287,10 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
  */
 void calcularPromedioDeVariosArchivos() {
 	int cantidadArchivos = 0;
-    printf("¬øCuantos archivos desea promediar? ");
+    printf("øCuantos archivos desea promediar? ");
     scanf("%d", &cantidadArchivos);
 
-    // Limpiamos el buffer de entrada despu√©s de leer un n√∫mero
+    // Limpiamos el buffer de entrada despuÈs de leer un n˙mero
     while (getchar() != '\n');
 
     if (cantidadArchivos <= 0) {
@@ -307,11 +307,11 @@ void calcularPromedioDeVariosArchivos() {
     for (int i = 0; i < cantidadArchivos; i++) {
         printf(" Ruta del archivo #%d: ", i + 1);
 
-        // fgets lee la l√≠nea completa, incluyendo espacios, hasta presionar Enter.
+        // fgets lee la lÌnea completa, incluyendo espacios, hasta presionar Enter.
         fgets(rutas[i], 256, stdin);
 
-        // IMPORTANTE: fgets guarda el salto de l√≠nea ('\n') al final. Debemos eliminarlo.
-        // Esta l√≠nea busca el primer '\n' y lo reemplaza con el terminador nulo '\0'.
+        // IMPORTANTE: fgets guarda el salto de lÌnea ('\n') al final. Debemos eliminarlo.
+        // Esta lÌnea busca el primer '\n' y lo reemplaza con el terminador nulo '\0'.
         rutas[i][strcspn(rutas[i], "\n")] = 0;
 	}
 
