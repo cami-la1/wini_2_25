@@ -14,44 +14,52 @@ void resolverDesdeArchivo();
 void imprimir2dos();
 void calcularPromedioDeVariosArchivos();
 void encontrarSegundoMayor(double numeros[], int contador);
+void calcularPromedioSumaDeDigitos();
+
+
+int sumarDigitosDeNumero(const char* bufferNumero);
+bool leerSiguienteEntero(FILE* archivo, char* buffer, int tamanoBuffer);
+
+
 #pragma argsused
 int _tmain(int argc, _TCHAR* argv[])
 {
-    char opcion;
+	char opcion;
 
-    do {
+	do {
 		system("cls");
 		printf("=============================================\n");
-		printf("     CALCULADORA DE ARCHIVOS DE TEXTO      \n");
+		printf("     ANALIZADOR DE ARCHIVOS DE TEXTO       \n");
 		printf("=============================================\n\n");
-		printf("   MENU PRINCIPAL\n");
-		printf("   1. Resolver del archivo (datos.txt)\n");
-		printf("   2. Salir\n\n");
-		printf("   Elija una opcion: ");
+		// --- MENÚ CORREGIDO ---
+        printf("   MENU PRINCIPAL\n");
+        printf("   1. Sumar numeros de 'datos.txt'\n");
+        printf("   2. Analizar suma de digitos (2 archivos)\n"); // <-- Opción 2 ahora es la de dígitos
+        printf("   3. Salir\n\n");                                  // <-- Opción 3 ahora es para salir
+        printf("   Elija una opcion: ");
 
 		opcion = getche();
         printf("\n\n");
 
+        // --- LÓGICA DEL SWITCH CORREGIDA ---
         switch (opcion) {
-			case '1':
+            case '1':
 				resolverDesdeArchivo();
-				///imprimir2dos();
                 break;
-			case '2':
+            case '2':
+                // Se llama a la función que suma dígitos y pide 2 archivos
+				calcularPromedioSumaDeDigitos();
+                break;
+            case '3':
 				printf("Saliendo del programa...\n");
-				break;
-			  case '3':
-				printf("SUMAR DE VARIOS ARCHIVOS...\n");
-				calcularPromedioDeVariosArchivos();
-				break;
-
+                break;
             default:
                 printf("Opcion no valida. Presione cualquier tecla para continuar.\n");
                 getch();
                 break;
-        }
+		}
 
-    } while (opcion != '2');
+    } while (opcion != '3'); // <-- CONDICIÓN DE SALIDA CORREGIDA
 
     return 0;
 }
@@ -67,7 +75,7 @@ void resolverDesdeArchivo() {
 	if (archivo == NULL) {
 		printf("Error: No se pudo encontrar o abrir el archivo 'datos.txt'.\n");
 		system("pause");
-        return;
+		return;
 	}
 	double resultado = 0.0;
 	char bufferNumero[64];
@@ -287,14 +295,15 @@ void procesarArchivoParaPromedio(const char* rutaArchivo, double &sumaTotal, int
  */
 void calcularPromedioDeVariosArchivos() {
 	int cantidadArchivos = 0;
-    printf("¿Cuantos archivos desea promediar? ");
-    scanf("%d", &cantidadArchivos);
-
+	/*printf("¿Cuantos archivos desea promediar? ");
+	scanf("%d", &cantidadArchivos);
+	  */
+   cantidadArchivos=2;
     // Limpiamos el buffer de entrada después de leer un número
     while (getchar() != '\n');
 
-    if (cantidadArchivos <= 0) {
-        printf("Cantidad no valida.\n");
+	if (cantidadArchivos <= 0) {
+		printf("Cantidad no valida.\n");
         system("pause");
         return;
     }
@@ -344,6 +353,153 @@ void calcularPromedioDeVariosArchivos() {
         printf(" - Promedio Final: %.2f\n", promedioFinal);
     } else {
         printf("No se encontraron numeros en los archivos procesados.\n");
+    }
+    printf("---------------------------------------------\n");
+    system("pause");
+}
+
+
+/**
+ * @brief Recibe un número como texto y devuelve la suma de sus dígitos.
+ * @param bufferNumero El número en formato de cadena de caracteres.
+ * @return La suma entera de los dígitos.
+ */
+int sumarDigitosDeNumero(const char* bufferNumero) {
+	int suma = 0;
+	for (int i = 0; bufferNumero[i] != '\0'; i++) {
+		// Nos aseguramos de sumar solo los caracteres que son dígitos
+		if (isdigit(bufferNumero[i])) {
+			// Convertimos el caracter ('5') a su valor numérico (5)
+			suma += bufferNumero[i] - '0';
+		}
+	}
+    return suma;
+}
+/**
+ * @brief Lee un stream de archivo y extrae el siguiente NÚMERO ENTERO que encuentra.
+ * @return true si se encontró un número, false si se llegó al final del archivo.
+ */
+bool leerSiguienteEntero(FILE* archivo, char* buffer, int tamanoBuffer) {
+    int caracterActual;
+    while ((caracterActual = fgetc(archivo)) != EOF) {
+		bool esInicioDeNumero = false;
+        if (isdigit(caracterActual)) {
+            esInicioDeNumero = true;
+            ungetc(caracterActual, archivo);
+        } else if (caracterActual == '-') {
+            int proximo = fgetc(archivo);
+            if (proximo != EOF && isdigit(proximo)) {
+                esInicioDeNumero = true;
+                ungetc(proximo, archivo);
+                ungetc(caracterActual, archivo);
+            } else if (proximo != EOF) {
+                ungetc(proximo, archivo);
+            }
+		}
+
+        if (esInicioDeNumero) {
+            int i = 0;
+            while (i < tamanoBuffer - 1) {
+                caracterActual = fgetc(archivo);
+                // La condición ahora solo acepta dígitos y el signo al inicio
+                if ((i == 0 && caracterActual == '-') || isdigit(caracterActual)) {
+                    buffer[i++] = caracterActual;
+                } else {
+                    ungetc(caracterActual, archivo);
+                    break;
+                }
+			}
+            buffer[i] = '\0';
+            return true;
+        }
+    }
+    return false;
+}
+
+void calcularPromedioSumaDeDigitos() {
+
+    int cantidadArchivos = 2;
+    /*
+    printf("¿Cuantos archivos desea procesar? ");
+	scanf("%d", &cantidadArchivos);
+    while (getchar() != '\n'); // Ya no es necesario
+    */
+
+    char rutas[50][256];
+    printf("\nIngrese las 2 rutas de los archivos (sin comillas):\n");
+    for (int i = 0; i < cantidadArchivos; i++) {
+        printf(" Ruta del archivo #%d: ", i + 1);
+        fgets(rutas[i], 256, stdin);
+        rutas[i][strcspn(rutas[i], "\n")] = 0;
+    }
+
+    // --- FASE 1: Recolectar todas las sumas de dígitos de todos los archivos ---
+	int todasLasSumas[1024];
+    int contadorDeSumas = 0;
+    printf("\n--- Procesando Archivos ---\n");
+
+    for (int i = 0; i < cantidadArchivos; i++) {
+        FILE* archivo = fopen(rutas[i], "r");
+        if (archivo == NULL) {
+            printf(" -> Error al abrir '%s'.\n", rutas[i]);
+            continue;
+        }
+
+        char buffer[64];
+        // Se usa la función auxiliar 'leerSiguienteEntero' que definimos antes
+		while (leerSiguienteEntero(archivo, buffer, 64)) {
+            if (contadorDeSumas < 1024) {
+                // Se usa la función auxiliar 'sumarDigitosDeNumero' que definimos antes
+                todasLasSumas[contadorDeSumas++] = sumarDigitosDeNumero(buffer);
+            }
+        }
+        fclose(archivo);
+    }
+
+    // --- FASE 2: Calcular y mostrar los resultados (sin cambios) ---
+    printf("\n---------------------------------------------\n");
+    if (contadorDeSumas > 0) {
+        double sumaTotalDeDigitos = 0;
+		for(int i = 0; i < contadorDeSumas; i++) {
+            sumaTotalDeDigitos += todasLasSumas[i];
+        }
+        double promedio = sumaTotalDeDigitos / contadorDeSumas;
+
+        int menorCercano = -1, mayorCercano = -1;
+        double diffMenor = 1e9, diffMayor = 1e9;
+
+        for (int i = 0; i < contadorDeSumas; i++) {
+            int sumaActual = todasLasSumas[i];
+            if (sumaActual < promedio) {
+                if ((promedio - sumaActual) < diffMenor) {
+                    diffMenor = promedio - sumaActual;
+					menorCercano = sumaActual;
+                }
+            } else if (sumaActual > promedio) {
+                if ((sumaActual - promedio) < diffMayor) {
+                    diffMayor = sumaActual - promedio;
+                    mayorCercano = sumaActual;
+                }
+            }
+        }
+
+        printf("Resultados del Analisis de Digitos:\n");
+        printf(" - Promedio de la suma de digitos: %.2f\n", promedio);
+
+		if (menorCercano != -1) {
+            printf(" - Suma de digitos menor mas cercana al promedio: %d\n", menorCercano);
+        } else {
+            printf(" - No se encontraron sumas menores al promedio.\n");
+        }
+
+        if (mayorCercano != -1) {
+            printf(" - Suma de digitos mayor mas cercana al promedio: %d\n", mayorCercano);
+        } else {
+            printf(" - No se encontraron sumas mayores al promedio.\n");
+        }
+
+    } else {
+		printf("No se encontraron numeros en los archivos procesados.\n");
     }
     printf("---------------------------------------------\n");
     system("pause");
