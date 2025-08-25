@@ -57,8 +57,8 @@ object Form1: TForm1
     OnClick = Button5Click
   end
   object Edit1: TEdit
-    Left = 128
-    Top = 64
+    Left = 119
+    Top = 66
     Width = 177
     Height = 23
     TabOrder = 5
@@ -111,5 +111,57 @@ object Form1: TForm1
     Height = 23
     TabOrder = 11
     Text = '100'
+  end
+  object Button6: TButton
+    Left = 24
+    Top = 224
+    Width = 75
+    Height = 25
+    Caption = 'CREAR LISTA'
+    TabOrder = 12
+    OnClick = Button6Click
+  end
+  object Button7: TButton
+    Left = 24
+    Top = 255
+    Width = 75
+    Height = 25
+    Caption = 'inserar ini'
+    TabOrder = 13
+    OnClick = Button7Click
+  end
+  object Button8: TButton
+    Left = 24
+    Top = 286
+    Width = 75
+    Height = 25
+    Caption = 'insertar fin'
+    TabOrder = 14
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 24
+    Top = 317
+    Width = 75
+    Height = 25
+    Caption = 'mostar '
+    TabOrder = 15
+    OnClick = Button9Click
+  end
+  object Edit8: TEdit
+    Left = 120
+    Top = 256
+    Width = 121
+    Height = 23
+    TabOrder = 16
+    Text = 'Edit8'
+  end
+  object Edit9: TEdit
+    Left = 120
+    Top = 287
+    Width = 121
+    Height = 23
+    TabOrder = 17
+    Text = 'Edit9'
   end
 end

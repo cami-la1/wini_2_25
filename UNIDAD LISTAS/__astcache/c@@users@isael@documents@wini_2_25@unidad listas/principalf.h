@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 
 #ifndef PrincipalFH
 #define PrincipalFH
@@ -8,6 +8,9 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 	#include "Umemoria.h"
+
+#include "UCSLista.h"
+#include "UPlista.h"
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -24,18 +27,29 @@ __published:	// IDE-managed Components
 	TEdit *Edit5;
 	TEdit *Edit6;
 	TEdit *Edit7;
+	TButton *Button6;
+	TButton *Button7;
+	TButton *Button8;
+	TButton *Button9;
+	TEdit *Edit8;
+	TEdit *Edit9;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
 	void __fastcall Button4Click(TObject *Sender);
 	void __fastcall Button5Click(TObject *Sender);
+	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall Button7Click(TObject *Sender);
+	void __fastcall Button8Click(TObject *Sender);
+	void __fastcall Button9Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
   //-----------------Memoria-------------------//
    int x;
   CSmemoria* M;
-
-
+ Lista * l;     //memoria
+//ptrlista *    l ;  //puntero
+ //Vlista *l  ;       //vector
 	__fastcall TForm1(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

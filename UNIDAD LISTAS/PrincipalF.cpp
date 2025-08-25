@@ -53,3 +53,32 @@ void __fastcall TForm1::Button5Click(TObject *Sender)
 
 }
 //---------------------------------------------------------------------------
+void __fastcall TForm1::Button6Click(TObject *Sender)
+{
+		l = new Lista(M);
+//  l = new ptrlista();
+  //l = new Vlista();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button7Click(TObject *Sender)
+{
+	int p= StrToInt(Edit8->Text);
+l-> inserta_primero(p);
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button8Click(TObject *Sender)
+{   	int p= StrToInt(Edit9->Text);
+l-> inserta_ultimo(p);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button9Click(TObject *Sender)
+{
+			l->imprimir2(Form1->Color,Canvas, 200,400);
+}
+//---------------------------------------------------------------------------
+

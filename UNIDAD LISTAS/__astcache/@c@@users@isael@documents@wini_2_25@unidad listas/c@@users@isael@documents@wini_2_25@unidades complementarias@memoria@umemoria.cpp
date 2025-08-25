@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 
 	#pragma hdrstop
 
@@ -514,6 +514,12 @@ void CSmemoria::ImprimirP_DE_A_A_B(TColor FormColor, TCanvas *Canvas,int posX,in
 		}else{
 		return " ";
 		}
+	}
+
+	void CSmemoria::prubea()  {
+
+
+
 	}
 
 

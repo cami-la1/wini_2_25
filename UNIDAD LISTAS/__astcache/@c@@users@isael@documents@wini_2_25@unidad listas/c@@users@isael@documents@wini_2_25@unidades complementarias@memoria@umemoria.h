@@ -52,6 +52,7 @@ class CSmemoria{
     	void ImprimirP_DE_A_A_B2(TColor FormColor, TCanvas *Canvas,int posX,int posY,int a , int b);
 	int leng(int i);
 	 String libre_casilla6(int i,bool dir_libre);
+	 void prubea()  ;
 
 };
 #endif
