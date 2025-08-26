@@ -405,7 +405,7 @@ void CSmemoria::ImprimirP_DE_A_A_B(TColor FormColor, TCanvas *Canvas,int posX,in
 
           // Columna "link" con diagonal
 		  Canvas->Brush->Color = clYellow;
-          Canvas->Rectangle(posX, posY, posX + TamanoCeldaX, posY + TamanoCeldaY);
+		  Canvas->Rectangle(posX, posY, posX + TamanoCeldaX, posY + TamanoCeldaY);
           Canvas->TextOutW(posX + 3, posY + 3, IntToStr(mem[i].link));
 
           // Línea diagonal en "link"
@@ -418,13 +418,13 @@ void CSmemoria::ImprimirP_DE_A_A_B(TColor FormColor, TCanvas *Canvas,int posX,in
           Canvas->Brush->Color = FormColor;
 		}
       }
-      String as = "Libre: " + IntToStr(libre);
+	  String as = "Libre: " + IntToStr(libre);
       Pintado(posX, posY + 10, as, FormColor, Canvas);
 	} else {
-      ShowMessage("A tiene que ser mayor que B");
-    }
+	  ShowMessage("A tiene que ser mayor que B");
+	}
   } else {
-    ShowMessage("Valor excede el tamaño de la memoria");
+	ShowMessage("Valor excede el tamaño de la memoria");
   }
 }
 
@@ -521,5 +521,99 @@ void CSmemoria::ImprimirP_DE_A_A_B(TColor FormColor, TCanvas *Canvas,int posX,in
 
 
 	}
+void CSmemoria::MostrarMemoriaDesplazada(TColor FormColor, TCanvas *Canvas, int posX, int posY, int A, int B) {
+    if (B >= MAX || A < 0 || A > B) {
+        ShowMessage("Rango inválido.");
+        return;
+    }
 
+    int auxX = posX;
+    Canvas->Font->Size = 8;
+    Canvas->Pen->Color = clBlack; // Borde negro para todas las celdas
 
+    for (int i = A; i <= B; i++) {
+        posX = auxX; // Reinicia la posición X para cada fila
+
+        // La lógica principal: ¿el espacio está asignado o libre?
+        bool ocupado = !dir_libre(i);
+
+        if (ocupado) {
+            // --- VISTA OCUPADA / DESPLAZADA ---
+            // El bloque completo (dir, dato, id) se mueve a la derecha.
+
+            // Calcula la posición inicial para TODO el bloque desplazado.
+            int posX_desplazado = auxX + (TamanoCeldaX * 4) + 20;
+
+            // Dibuja 'dir' en la nueva posición desplazada
+            TRect dirRect(posX_desplazado, posY, posX_desplazado + TamanoCeldaX, posY + TamanoCeldaY);
+            Canvas->Brush->Color = clWhite;
+            Canvas->Rectangle(dirRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX_desplazado + 5, posY + 7, IntToStr(i));
+            Canvas->Brush->Style = bsSolid;
+            posX_desplazado += TamanoCeldaX;
+
+            // Dibuja 'dato' al lado del 'dir' desplazado
+            TRect datoRect(posX_desplazado, posY, posX_desplazado + TamanoCeldaX, posY + TamanoCeldaY);
+            Canvas->Brush->Color = clGreen;
+            Canvas->Rectangle(datoRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX_desplazado + 5, posY + 7, IntToStr(mem[i].dato));
+            Canvas->Brush->Style = bsSolid;
+            posX_desplazado += TamanoCeldaX;
+
+            // Dibuja 'id' al final del bloque
+            TRect idRect(posX_desplazado, posY, posX_desplazado + TamanoCeldaX, posY + TamanoCeldaY);
+            Canvas->Brush->Color = clYellow;
+            Canvas->Rectangle(idRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX_desplazado + 5, posY + 7, mem[i].id.c_str());
+            Canvas->Brush->Style = bsSolid;
+
+        } else {
+            // --- VISTA LIBRE / NORMAL ---
+            // Dibuja las 4 columnas de forma normal, empezando desde la izquierda.
+
+            // Dibuja 'dir'
+            TRect cellRect(posX, posY, posX + TamanoCeldaX, posY + TamanoCeldaY);
+            Canvas->Brush->Color = clWhite;
+            Canvas->Rectangle(cellRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX + 5, posY + 7, IntToStr(i));
+            Canvas->Brush->Style = bsSolid;
+            posX += TamanoCeldaX;
+
+            // Dibuja 'dato'
+            cellRect.left = posX; cellRect.right = posX + TamanoCeldaX;
+            Canvas->Brush->Color = clGreen;
+            Canvas->Rectangle(cellRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX + 5, posY + 7, IntToStr(mem[i].dato));
+            Canvas->Brush->Style = bsSolid;
+            posX += TamanoCeldaX;
+
+            // Dibuja 'id'
+            cellRect.left = posX; cellRect.right = posX + TamanoCeldaX;
+            Canvas->Brush->Color = clYellow;
+            Canvas->Rectangle(cellRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX + 5, posY + 7, mem[i].id.c_str());
+            Canvas->Brush->Style = bsSolid;
+            posX += TamanoCeldaX;
+
+            // Dibuja 'link'
+            cellRect.left = posX; cellRect.right = posX + TamanoCeldaX;
+            Canvas->Brush->Color = clYellow;
+            Canvas->Rectangle(cellRect);
+            Canvas->Brush->Style = bsClear;
+            Canvas->TextOut(posX + 5, posY + 7, IntToStr(mem[i].link));
+            Canvas->Brush->Style = bsSolid;
+        }
+
+        posY += TamanoCeldaY; // Avanza a la siguiente fila
+    }
+     // Muestra el puntero 'libre' al final
+    posX = auxX;
+    Canvas->Brush->Color = FormColor;
+    Canvas->TextOut(posX, posY + 10, "Libre: " + IntToStr(libre));
+}

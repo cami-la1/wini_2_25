@@ -53,6 +53,8 @@ class CSmemoria{
 	int leng(int i);
 	 String libre_casilla6(int i,bool dir_libre);
 	 void prubea()  ;
-
+          void MostrarDesplazado1(TColor FormColor, TCanvas *Canvas, int posX, int posY, int A, int B);
+	void MostrarDesplazado2(TColor FormColor, TCanvas *Canvas, int posX, int posY, int A, int B);
+	void MostrarMemoriaDesplazada(TColor FormColor, TCanvas *Canvas, int posX, int posY, int A, int B) ;
 };
 #endif
